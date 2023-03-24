@@ -1,0 +1,17 @@
+stages:
+  - deploy
+
+variables:
+  APP_NAME: test-mirror
+  VERSION: 1.1.$CI_PIPELINE_IID
+
+push:
+  stage: deploy
+  script:
+    - git config --global user.email $OPEN_SOURCE_GITHUB_EMAIL
+    - git config --global user.name $OPEN_SOURCE_GITHUB_LOGIN
+    - git config --global http.proxy http://sys-proxy.raiffeisen.ru:8080
+    - git tag v$VERSION
+    - git push https://$OPEN_SOURCE_GITHUB_LOGIN:$OPEN_SOURCE_GITHUB_TOKEN@github.com/user-ecom-git/$APP_NAME.git HEAD:main --force v$VERSION
+  only:
+    - master
